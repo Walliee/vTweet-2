@@ -13,7 +13,7 @@ drop procedure ListResponses;
 
 GO
 
-
+--Procedure for adding a new video
 create procedure AddVideo(
 @UserID uniqueidentifier,
 @URL text)
@@ -25,6 +25,7 @@ end
 
 GO
 
+--Procedure for removing a video
 create procedure RemoveVideo(
 @VideoID int
 )
@@ -36,6 +37,7 @@ end
 
 GO
 
+--Procedure for sending a friend request
 create procedure SendFriendRequest(
 @UserID uniqueidentifier,
 @FriendUserID uniqueidentifier,
@@ -48,6 +50,7 @@ end
 
 GO
 
+--Procedure for updating friend request or delete a friend
 create procedure UpdateFriendRequest(
 @UserID uniqueidentifier,
 @FriendUserID uniqueidentifier,
@@ -67,6 +70,7 @@ end
 
 GO
 
+--Procedure for adding a video as response to another video. To be called after response has been added to Video table using AddVideo
 create procedure AddResponse(
 @OriginalVideoID int,
 @ResponseVideoID int)
@@ -78,6 +82,7 @@ end
 
 GO
 
+--Prodedure to verify if two users are friends
 create function IsFriend(
 @UserID uniqueidentifier,
 @FriendUserID uniqueidentifier)
@@ -100,6 +105,7 @@ end
 
 GO
 
+--Procedure to list all the users
 create procedure ListUsers
 as
 begin
@@ -108,6 +114,7 @@ end
 
 GO
 
+--Procedure to list all the friends of a particular user
 create procedure ListFriends(
 @UserID uniqueidentifier)
 as
@@ -118,6 +125,7 @@ end
 
 GO
 
+--Procedure to list all the videos posted by a particular user
 create procedure ListVideos(
 @UserID uniqueidentifier)
 as
@@ -129,6 +137,7 @@ end
 
 GO
 
+--Procedure to list all the responses to a particular video
 create procedure ListResponses(
 @VideoID int)
 as
