@@ -10,6 +10,8 @@ drop procedure ListUsers;
 drop procedure ListFriends;
 drop procedure ListVideos;
 drop procedure ListResponses;
+drop procedure ListFriendVideos;
+drop procedure ListNonFriends;
 
 GO
 
@@ -40,12 +42,11 @@ GO
 --Procedure for sending a friend request
 create procedure Follow(
 @UserID uniqueidentifier,
-@FriendUserID uniqueidentifier,
-@Status varchar(1))
+@FriendUserID uniqueidentifier)
 as
 begin
-insert into Friends(UserID,FriendUserID,Status)
-values(@UserID,@FriendUserID,@status);
+insert into Friends(UserID,FriendUserID)
+values(@UserID,@FriendUserID);
 end
 
 GO
@@ -110,13 +111,8 @@ create procedure ListFriends(
 @UserID uniqueidentifier)
 as
 begin
-<<<<<<< HEAD
 select * from Users
 where UserID in (select FriendUserID from Friends where UserID=@UserID and Status='y')
-=======
-select * from Friends
-where UserID=@UserID or FriendUserID=@UserID;
->>>>>>> daa11cc935999bbd78eb41851ef0f5449a9ee3b2
 end
 
 GO
@@ -147,7 +143,6 @@ begin
 select * from VideoResponse
 where OriginalVideoID=@VideoID
 order by Timestamp;
-<<<<<<< HEAD
 end
 
 GO
@@ -178,6 +173,4 @@ as
 begin
 select * from Users
 where UserID not in ((select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
-=======
->>>>>>> daa11cc935999bbd78eb41851ef0f5449a9ee3b2
 end
