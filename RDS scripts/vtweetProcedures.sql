@@ -10,8 +10,6 @@ drop procedure ListUsers;
 drop procedure ListFriends;
 drop procedure ListVideos;
 drop procedure ListResponses;
-drop procedure ListFriendVideos;
-drop procedure ListNonFriends;
 
 GO
 
@@ -42,11 +40,12 @@ GO
 --Procedure for sending a friend request
 create procedure SendFriendRequest(
 @UserID uniqueidentifier,
-@FriendUserID uniqueidentifier)
+@FriendUserID uniqueidentifier,
+@Status varchar(1))
 as
 begin
-insert into Friends(UserID,FriendUserID)
-values(@UserID,@FriendUserID);
+insert into Friends(UserID,FriendUserID,Status)
+values(@UserID,@FriendUserID,@status);
 end
 
 GO
@@ -120,9 +119,8 @@ create procedure ListFriends(
 @UserID uniqueidentifier)
 as
 begin
-select * from Users
-where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
-union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
+select * from Friends
+where UserID=@UserID or FriendUserID=@UserID;
 end
 
 GO
@@ -147,28 +145,4 @@ begin
 select * from VideoResponse
 where OriginalVideoID=@VideoID
 order by Timestamp;
-end
-
-GO
-
---Procedure to list all friends videos
-create procedure ListFriendVideos(
-@UserID uniqueidentifier)
-as
-begin
-select * from Video
-where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
-union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
-end
-
-GO
-
---Procedure to list all users who are not friends
-create procedure ListNonFriends(
-@UserID uniqueIdentifier)
-as
-begin
-select * from Users
-where UserID not in ((select UserID from Friends where FriendUserID=@UserID)
-union (select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
 end
