@@ -2,8 +2,8 @@ USE [TweetAuthLogin]
 GO
 drop procedure AddVideo;
 drop procedure RemoveVideo;
-drop procedure SendFriendRequest;
-drop procedure UpdateFriendRequest;
+drop procedure Follow;
+drop procedure Unfollow;
 drop procedure AddResponse;
 drop function IsFriend;
 drop procedure ListUsers;
@@ -40,7 +40,7 @@ end
 GO
 
 --Procedure for sending a friend request
-create procedure SendFriendRequest(
+create procedure Follow(
 @UserID uniqueidentifier,
 @FriendUserID uniqueidentifier)
 as
@@ -52,21 +52,12 @@ end
 GO
 
 --Procedure for updating friend request or delete a friend
-create procedure UpdateFriendRequest(
+create procedure Unfollow(
 @UserID uniqueidentifier,
-@FriendUserID uniqueidentifier,
-@Status varchar(1))
+@FriendUserID uniqueidentifier)
 as
 begin
- if(@Status='y')
-begin
-update friends
-set status='y' where UserID=@UserID and FriendUserID=@FriendUserID;
-    end
- else
-begin
 delete from friends where UserID=@UserID and FriendUserID=@FriendUserID
-end
 end
 
 GO
@@ -121,8 +112,7 @@ create procedure ListFriends(
 as
 begin
 select * from Users
-where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
-union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
+where UserID in (select FriendUserID from Friends where UserID=@UserID and Status='y')
 end
 
 GO
@@ -132,8 +122,14 @@ create procedure ListVideos(
 @UserID uniqueidentifier)
 as
 begin
-select * from Video
-where UserID=@UserID
+with temp(VideoID, UserName, URL, Timestamp)
+as(
+select v.VideoID, u.UserName, v.URL, v.Timestamp from Video as v, Users as u
+where v.UserID=u.UserID and v.UserID = @UserID
+)
+select Coalesce(OriginalVideoID, VideoID) as ParentVideoID, UserName, URL, temp.Timestamp
+from temp left outer join VideoResponse as vr
+on temp.VideoID = vr.ResponseVideoID
 order by Timestamp;
 end
 
@@ -156,9 +152,16 @@ create procedure ListFriendVideos(
 @UserID uniqueidentifier)
 as
 begin
-select * from Video
-where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
-union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
+with temp(VideoID, UserName, URL, Timestamp)
+as(
+select v.VideoID, u.UserName, v.URL, v.Timestamp from Video as v, Users as u
+where v.UserID=u.UserID and v.UserID in (select FriendUserID from Friends where UserID=@UserID and Status='y')
+and VideoID not in (Select ResponseVideoID from VideoResponse where ResponseVideoID in (select VideoID 
+																from Video 
+																where UserID = @UserID)))
+select Coalesce(OriginalVideoID, VideoID) as ParentVideoID, UserName, URL, temp.Timestamp
+from temp left outer join VideoResponse as vr
+on temp.VideoID = vr.ResponseVideoID
 end
 
 GO
@@ -169,6 +172,5 @@ create procedure ListNonFriends(
 as
 begin
 select * from Users
-where UserID not in ((select UserID from Friends where FriendUserID=@UserID)
-union (select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
+where UserID not in ((select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
 end
