@@ -1,9 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "VTweet(3)", ".", "{55354AE7-5163-4DC5-83F8-68ECBAC87E5D}"
+# Visual Studio 2012
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "VTweet", ".", "{4E8FB431-04B1-42BE-826F-53D929FF68D9}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/VTweet"
@@ -21,7 +19,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "VTweet(3)", ".", "{55354AE7
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "57468"
-		SlnRelativePath = "..\VTweet\"
 	EndProjectSection
 EndProject
 Global
@@ -29,8 +26,8 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{55354AE7-5163-4DC5-83F8-68ECBAC87E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55354AE7-5163-4DC5-83F8-68ECBAC87E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E8FB431-04B1-42BE-826F-53D929FF68D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E8FB431-04B1-42BE-826F-53D929FF68D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
