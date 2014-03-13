@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="Server">
     <section class="featured">
         <div class="content-wrapper">
-            <video id="vid1" runat="server" width="640" height="360" preload="none" controls="controls">
+            <video id="vid1" runat="server" width="640" height="360" preload="metadata" controls="controls">
             </video>
 
         </div>
@@ -19,7 +19,7 @@
         <ItemTemplate>
 
             <p>
-                <video id="sampleMovie" width="300" height="200" preload="none" controls="controls">
+                <video id="sampleMovie" width="300" height="200" preload="metadata" controls="controls">
                     <source src="<%# Eval("Url") %>" />
                 </video>
                 <br />

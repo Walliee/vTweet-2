@@ -11,7 +11,7 @@
             <p>
                 
                <asp:Label runat="server" Text='<%# Eval("UserName") %>'></asp:Label>:
-               <asp:Button ID="Button1" runat="server" Text="UnFollow" CommandArgument='<%# Eval("UserID") %>' CommandName="CmdUnFollow" OnClick="MyBtnHandler" />
+               <asp:Button ID="Button1" runat="server" Text="Unfollow" CommandArgument='<%# Eval("UserID") %>' CommandName="CmdUnFollow" OnClick="MyBtnHandler" />
  
             </p>
             
