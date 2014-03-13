@@ -11,6 +11,7 @@ drop procedure ListFriends;
 drop procedure ListVideos;
 drop procedure ListResponses;
 drop procedure ListFriendVideos;
+drop procedure ListNonFriends;
 
 GO
 
@@ -150,7 +151,7 @@ end
 
 GO
 
---Procedure to list all the responses to a particular video
+--Procedure to list all friends videos
 create procedure ListFriendVideos(
 @UserID uniqueidentifier)
 as
@@ -158,4 +159,16 @@ begin
 select * from Video
 where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
 union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
+end
+
+GO
+
+--Procedure to list all users who are not friends
+create procedure ListNonFriends(
+@UserID uniqueIdentifier)
+as
+begin
+select * from Friends
+where UserID not in ((select UserID from Friends where FriendUserID=@UserID)
+union (select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
 end
