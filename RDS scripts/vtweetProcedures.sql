@@ -42,12 +42,11 @@ GO
 --Procedure for sending a friend request
 create procedure SendFriendRequest(
 @UserID uniqueidentifier,
-@FriendUserID uniqueidentifier,
-@Status varchar(1))
+@FriendUserID uniqueidentifier)
 as
 begin
-insert into Friends(UserID,FriendUserID,Status)
-values(@UserID,@FriendUserID,@status);
+insert into Friends(UserID,FriendUserID)
+values(@UserID,@FriendUserID);
 end
 
 GO
@@ -121,8 +120,9 @@ create procedure ListFriends(
 @UserID uniqueidentifier)
 as
 begin
-select * from Friends
-where UserID=@UserID or FriendUserID=@UserID;
+select * from Users
+where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
+union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
 end
 
 GO
@@ -168,7 +168,7 @@ create procedure ListNonFriends(
 @UserID uniqueIdentifier)
 as
 begin
-select * from Friends
+select * from Users
 where UserID not in ((select UserID from Friends where FriendUserID=@UserID)
 union (select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
 end

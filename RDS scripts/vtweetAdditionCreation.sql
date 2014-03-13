@@ -34,7 +34,7 @@ GO
 CREATE TABLE [dbo].[Friends](
 	[UserID] [uniqueidentifier] NOT NULL,
 	[FriendUserID] [uniqueidentifier] NOT NULL,
-	[Status] varchar(1) NOT NULL,
+	[Status] varchar(1) NOT NULL DEFAULT 'y',
 	[Timestamp] datetime2 NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	constraint pk_friends primary key(UserID, FriendUserID),
 	constraint fk_users_uid foreign key(UserID) references [dbo].[Users](UserID),
