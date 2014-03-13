@@ -10,6 +10,7 @@ drop procedure ListUsers;
 drop procedure ListFriends;
 drop procedure ListVideos;
 drop procedure ListResponses;
+drop procedure ListFriendVideos;
 
 GO
 
@@ -145,4 +146,16 @@ begin
 select * from VideoResponse
 where OriginalVideoID=@VideoID
 order by Timestamp;
+end
+
+GO
+
+--Procedure to list all the responses to a particular video
+create procedure ListFriendVideos(
+@UserID uniqueidentifier)
+as
+begin
+select * from Video
+where UserID in ((select UserID from Friends where FriendUserID=@UserID and Status='y') 
+union (select FriendUserID from Friends where UserID=@UserID and Status='y'))
 end
