@@ -65,7 +65,8 @@ namespace DAL
                     SqlDataReader dr= command.ExecuteReader();
                     while (dr.Read())
                     {
-                        myVideos.Add(new Video() { VideoID = dr[0].ToString(),UserName=dr[1].ToString(), Url = dr[2].ToString(), TimeStamp = dr[3].ToString() });
+                        string url = UtilityFunctions.transcodeUrl(dr[2].ToString());
+                        myVideos.Add(new Video() { VideoID = dr[0].ToString(),UserName=dr[1].ToString(), Url = url, TimeStamp = dr[3].ToString() });
                     }
                     dr.Close();
 
@@ -79,6 +80,8 @@ namespace DAL
             return myVideos;
 
         }
+
+      
 
         public static IEnumerable<Video> GetFriendVideos(Guid UserId)
         {
@@ -98,7 +101,8 @@ namespace DAL
                     SqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
-                        myVideos.Add(new Video() { VideoID = dr[0].ToString(),UserName=dr[1].ToString(), Url = dr[2].ToString(), TimeStamp = dr[3].ToString() });
+                        string url = UtilityFunctions.transcodeUrl(dr[2].ToString());
+                        myVideos.Add(new Video() { VideoID = dr[0].ToString(),UserName=dr[1].ToString(), Url = url, TimeStamp = dr[3].ToString() });
                     }
                     dr.Close();
 
@@ -115,7 +119,7 @@ namespace DAL
 
         public static Video GetVideo(string videoID)
         {
-            string queryString = "select * from video where VideoID = '"+videoID+"'";
+            string queryString = "select * from users,(select * from video where VideoID = '"+videoID+"') as temp where users.userid= temp.userid";
             Video myVideo = new Video();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -127,8 +131,9 @@ namespace DAL
                     SqlDataReader dr = command.ExecuteReader();
                     if (dr.Read())
                     {
-                        myVideo.VideoID = dr[0].ToString();
-                        myVideo.Url = dr[2].ToString();
+                        myVideo.VideoID = dr[5].ToString();
+                        myVideo.Url = UtilityFunctions.transcodeUrl(dr[7].ToString());
+                        myVideo.UserName = dr[2].ToString();
                     }
                     dr.Close();
 
@@ -178,7 +183,7 @@ namespace DAL
 
         public static IEnumerable<Video> GetMyVideoResponses(string  vid)
         {
-            string queryString = "select * from Video where VideoID in (select ResponseVideoID from VideoResponse where OriginalVideoID = '" + vid + "')";
+            string queryString = "select * from users,(select * from Video where VideoID in (select ResponseVideoID from VideoResponse where OriginalVideoID = '" + vid + "')) as temp where temp.userid = users.userid";
             List<Video> myVideos = new List<Video>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -192,7 +197,8 @@ namespace DAL
                     SqlDataReader dr = command.ExecuteReader();
                     while (dr.Read())
                     {
-                        myVideos.Add(new Video() { VideoID = dr[0].ToString(), Url = dr[2].ToString(), TimeStamp = dr[3].ToString() });
+                        string url = UtilityFunctions.transcodeUrl(dr[7].ToString());
+                        myVideos.Add(new Video() { VideoID = dr[5].ToString(), Url = url,UserName=dr[2].ToString(), TimeStamp = dr[8].ToString() });
                     }
                     dr.Close();
 
