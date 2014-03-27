@@ -1,7 +1,4 @@
 VTweet by Srujan Saggam and Anshul Mehra
 ======
 
-VTweet is a social networking site powered by AWS(EC2, S3, Elastic Beanstalk, 
-Cloudfront, RDS). It creates an ultimate social networking experience by 
-sharing videos over your social network.
- 
+TwitTube is a social networking website that lets you share video messages with your friends and get their reactions as video mesagges. You can login using your Facebook and Google accounts. This web service is powered by Amazon AWS. Services used are Amazon EC2, S3, Transcoder, SNS.
