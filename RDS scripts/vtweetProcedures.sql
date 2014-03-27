@@ -12,6 +12,7 @@ drop procedure ListVideos;
 drop procedure ListResponses;
 drop procedure ListFriendVideos;
 drop procedure ListNonFriends;
+drop procedure ListFollowers;
 
 GO
 
@@ -45,8 +46,8 @@ create procedure Follow(
 @FriendUserID uniqueidentifier)
 as
 begin
-insert into Friends(UserID,FriendUserID)
-values(@UserID,@FriendUserID);
+insert into Friends(UserID,FriendUserID,Status)
+values(@UserID,@FriendUserID,'y');
 end
 
 GO
@@ -173,4 +174,14 @@ as
 begin
 select * from Users
 where UserID not in ((select FriendUserID from Friends where UserID=@UserID) union (select @UserID))
+end
+
+go
+--Procedure for listing all the follower emails
+create procedure ListFollowers(
+@UserID uniqueIdentifier)
+as
+begin
+select * from Users
+where UserID in (select FriendUserID from Friends where UserID=@UserID and Status='y')
 end
